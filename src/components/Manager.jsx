@@ -7,6 +7,7 @@ const Manager = () => {
     const [dataArray, setdataArray] = useState([])
     const typeRef = useRef()
     const passwordRef = useRef()
+    const [editId, setEditId] = useState(null)
 
     useEffect(() => {
         const saved = localStorage.getItem("passwords");
@@ -17,15 +18,20 @@ const Manager = () => {
 
     const handleAdd = () => {
         if (form.site.length > 3 && form.username.length > 3 && form.password.length > 3) {
-            const updated = [...dataArray, { ...form, id: uuidv4() }];
+            let updated;
+            if (editId) {
+                updated = dataArray.map(item => item.id === editId ? { ...form, id: editId } : item);
+                setEditId(null);
+                toast.info("Password edited!");
+            } else {
+                updated = [...dataArray, { ...form, id: uuidv4() }];
+                toast.info("Password saved!");
+            }
             setdataArray(updated);
             localStorage.setItem("passwords", JSON.stringify(updated));
             setForm({ site: "", username: "", password: "" });
-            toast.success("Password saved successfully!");
-        } else {
-            toast.error("Error: All fields must be longer than 3 characters!");
         }
-    }
+    };
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -35,9 +41,7 @@ const Manager = () => {
         let edit = dataArray.find(item => item.id === id);
         if (edit) {
             setForm(edit);
-            let newData = dataArray.filter(item => item.id !== id);
-            setdataArray(newData);
-            localStorage.setItem("passwords", JSON.stringify(newData));
+            setEditId(id)
         }
     }
 
@@ -56,11 +60,11 @@ const Manager = () => {
         toast.info("Copied to clipboard!");
     }
 
-    const showPassword = () =>{
-        if(passwordRef.current.src.includes('/eye.svg')){
+    const showPassword = () => {
+        if (passwordRef.current.src.includes('/eye.svg')) {
             passwordRef.current.src = '/crossedeye.svg'
             typeRef.current.type = "password"
-        } else{
+        } else {
             passwordRef.current.src = '/eye.svg'
             typeRef.current.type = "text"
         }
@@ -156,10 +160,10 @@ const Manager = () => {
                                             <td className="px-6 py-4 text-black wrap-break-word">
                                                 <div className="flex items-center justify-between gap-2">
                                                     <span>{item.username}</span>
-                                                    <img 
-                                                        src="/copy.svg" 
-                                                        alt="copy" 
-                                                        className="h-5 w-5 cursor-pointer transition-transform hover:scale-110 shrink-0" 
+                                                    <img
+                                                        src="/copy.svg"
+                                                        alt="copy"
+                                                        className="h-5 w-5 cursor-pointer transition-transform hover:scale-110 shrink-0"
                                                         onClick={() => copyText(item.username)}
                                                     />
                                                 </div>
@@ -167,10 +171,10 @@ const Manager = () => {
                                             <td className="px-6 py-4 text-black wrap-break-word">
                                                 <div className="flex items-center justify-between gap-2">
                                                     <span>[Encrypted...]</span>
-                                                    <img 
-                                                        src="/copy.svg" 
-                                                        alt="copy" 
-                                                        className="h-5 w-5 cursor-pointer transition-transform hover:scale-110 shrink-0" 
+                                                    <img
+                                                        src="/copy.svg"
+                                                        alt="copy"
+                                                        className="h-5 w-5 cursor-pointer transition-transform hover:scale-110 shrink-0"
                                                         onClick={() => copyText(item.password)}
                                                     />
                                                 </div>
