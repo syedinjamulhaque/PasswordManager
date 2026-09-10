@@ -86,31 +86,31 @@ const Manager = () => {
                 transition={Bounce}
             />
             <main className="relative flex flex-col justify-center items-center font-playpen">
-                <div className="mx-auto w-2/3 px-4 py-8 sm:px-6 lg:px-8 bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl my-6 min-h-[80vh]">
+                <div className="mx-auto lg:w-2/3 md:w-5/6 w-[95%] px-3 py-6 sm:px-6 sm:py-8 lg:px-8 bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl my-4 sm:my-6 min-h-[80vh]">
                     <div className="flex flex-col items-center">
-                        <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
                             <span className="text-green-500">&lt;</span>
                             <span>Vaultix</span>
                             <span className="text-green-500">/&gt;</span>
                         </h1>
-                        <p className="mt-1 text-sm text-gray-600">Your own Password Manager</p>
-                        <div className="mt-8 flex w-full flex-col gap-4">
+                        <p className="mt-1 text-xs sm:text-sm text-gray-600">Your own Password Manager</p>
+                        <div className="mt-6 sm:mt-8 flex w-full flex-col gap-3 sm:gap-4">
                             <input
                                 type="text"
                                 value={form.site}
                                 name="site"
                                 onChange={handleChange}
                                 placeholder="Enter Website URL"
-                                className="w-full rounded-full border border-green-500 bg-white/70 px-4 py-2 text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-500"
+                                className="w-full rounded-full border border-green-500 bg-white/70 px-4 py-2 text-sm sm:text-base text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-500"
                             />
-                            <div className="flex flex-col gap-4 sm:flex-row">
+                            <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row">
                                 <input
                                     type="text"
                                     value={form.username}
                                     onChange={handleChange}
                                     name="username"
                                     placeholder="Enter Username"
-                                    className="w-full rounded-full border border-green-500 bg-white/70 px-4 py-2 text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-500"
+                                    className="w-full rounded-full border border-green-500 bg-white/70 px-4 py-2 text-sm sm:text-base text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-500"
                                 />
                                 <div className="relative w-full sm:w-1/2">
                                     <input ref={typeRef}
@@ -119,13 +119,13 @@ const Manager = () => {
                                         onChange={handleChange}
                                         name="password"
                                         placeholder="Enter Password"
-                                        className="w-full rounded-full border border-green-500 bg-white/70 px-4 py-2 text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-500"
+                                        className="w-full rounded-full border border-green-500 bg-white/70 px-4 py-2 text-sm sm:text-base text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-500"
                                     />
-                                    <span><img ref={passwordRef} src="/crossedeye.svg" alt="CrossedEye" className="absolute right-4 bottom-2 hover:cursor-pointer" onClick={showPassword} /></span>
+                                    <span><img ref={passwordRef} src="/crossedeye.svg" alt="CrossedEye" className="absolute right-4 bottom-2 h-5 w-5 sm:h-auto sm:w-auto hover:cursor-pointer" onClick={showPassword} /></span>
                                 </div>
                             </div>
                             <div className="mt-2 flex justify-center">
-                                <button onClick={() => handleAdd()} className="flex items-center gap-2 rounded-full bg-green-500 px-6 py-2 font-medium text-black shadow-md transition hover:bg-green-600 focus:outline-none outline-1">
+                                <button onClick={() => handleAdd()} className="flex items-center gap-2 rounded-full bg-green-500 px-5 py-2 sm:px-6 text-sm sm:text-base font-medium text-black shadow-md transition hover:bg-green-600 focus:outline-none outline-1">
                                     <img
                                         src="/system-solid-372-figures-hover-pinch.webp"
                                         alt="save icon"
@@ -135,11 +135,54 @@ const Manager = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="mt-10 w-full text-left">
-                            <h2 className="text-xl font-bold text-gray-900">Your Passwords</h2>
+                        <div className="mt-8 sm:mt-10 w-full text-left">
+                            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Your Passwords</h2>
                             {dataArray.length === 0 && <p className="mt-2 text-sm text-gray-500">No passwords to show</p>}
                         </div>
-                        <div className="mt-6 w-full overflow-x-auto rounded-xl border border-black bg-white/40 shadow-sm backdrop-blur-md">
+                        <div className="mt-4 sm:mt-6 w-full xl:hidden flex flex-col gap-3">
+                            {dataArray.map(item => {
+                                return <div key={item.id} className="rounded-xl border border-black bg-white/40 shadow-sm backdrop-blur-md p-4 text-sm text-black">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <a href={item.site.startsWith('http') ? item.site : `https://${item.site}`} target='_blank' className="font-semibold hover:underline break-all">
+                                            {item.site}
+                                        </a>
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <button onClick={() => handleEdit(item.id)} className="transition-transform hover:scale-110">
+                                                <img src="/system-solid-35-pencil-hover-pinch.webp" alt="Edit" className="h-5 w-5" />
+                                            </button>
+                                            <button onClick={() => handleDelete(item.id)} className="transition-transform hover:scale-110">
+                                                <img src="/system-solid-185-trash-bin-hover-pinch.webp" alt="Delete" className="h-5 w-5" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 flex items-center justify-between gap-2">
+                                        <span className="text-gray-700">Username</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="break-all">{item.username}</span>
+                                            <img
+                                                src="/copy.svg"
+                                                alt="copy"
+                                                className="h-4 w-4 cursor-pointer transition-transform hover:scale-110 shrink-0"
+                                                onClick={() => copyText(item.username)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="mt-2 flex items-center justify-between gap-2">
+                                        <span className="text-gray-700">Password</span>
+                                        <div className="flex items-center gap-2">
+                                            <span>[Encrypted...]</span>
+                                            <img
+                                                src="/copy.svg"
+                                                alt="copy"
+                                                className="h-4 w-4 cursor-pointer transition-transform hover:scale-110 shrink-0"
+                                                onClick={() => copyText(item.password)}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            })}
+                        </div>
+                        <div className="mt-4 sm:mt-6 w-full hidden xl:block overflow-x-auto rounded-xl border border-black bg-white/40 shadow-sm backdrop-blur-md">
                             <table className="w-full text-left text-sm text-black border-collapse table-fixed">
                                 <thead className="bg-green-500 text-black font-bold border-b border-black">
                                     <tr className="divide-x divide-black">
